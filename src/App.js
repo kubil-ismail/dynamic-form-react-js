@@ -1,92 +1,59 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { Formik, Form } from "formik";
+import { initialValues, validationSchema, formInput } from "./FormSchema";
+import Input from "./components/Input";
+
 function App() {
   return (
     <>
       <div className="row mt-5 justify-content-md-center">
         <div className="col-lg-6">
           <div className="card">
-            <form className="row g-3 card-body">
-              <div className="col-md-6">
-                <label htmlFor="inputEmail4" className="form-label">
-                  Email
-                </label>
-                <input type="email" className="form-control" id="inputEmail4" />
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="inputPassword4" className="form-label">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="inputPassword4"
-                />
-              </div>
-              <div className="col-12">
-                <label htmlFor="inputAddress" className="form-label">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAddress"
-                  placeholder="1234 Main St"
-                />
-              </div>
-              <div className="col-12">
-                <label htmlFor="inputAddress2" className="form-label">
-                  Address 2
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAddress2"
-                  placeholder="Apartment, studio, or floor"
-                />
-              </div>
-              <div className="col-md-6">
-                <label htmlFor="inputCity" className="form-label">
-                  City
-                </label>
-                <input type="text" className="form-control" id="inputCity" />
-              </div>
-              <div className="col-md-4">
-                <label htmlFor="inputState" className="form-label">
-                  State
-                </label>
-                <select id="inputState" className="form-select" defaultValue="">
-                  <option value="" disabled>
-                    Choose...
-                  </option>
-                  <option>...</option>
-                </select>
-              </div>
-              <div className="col-md-2">
-                <label htmlFor="inputZip" className="form-label">
-                  Zip
-                </label>
-                <input type="text" className="form-control" id="inputZip" />
-              </div>
-              <div className="col-12">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="gridCheck"
-                  />
-                  <label className="form-check-label" htmlFor="gridCheck">
-                    Check me out
-                  </label>
-                </div>
-              </div>
-              <div className="col-12">
-                <button type="submit" className="btn btn-primary">
-                  Sign in
-                </button>
-              </div>
-            </form>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={(val) => console.log(val)}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                setFieldValue,
+                isValid,
+              }) => (
+                <Form className="row g-3 card-body">
+                  {formInput.map((val, key) => (
+                    <Input
+                      key={key}
+                      id={val.name}
+                      name={val.name}
+                      label={val.label}
+                      type={val.type}
+                      options={val.options}
+                      grid={val.grid}
+                      placeholder={val.placeholder}
+                      value={values[val.name]}
+                      error={touched[val.name] && Boolean(errors[val.name])}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      helperText={touched[val.name] ? errors[val.name] : ""}
+                      handleSelect={(value) => setFieldValue(val.name, value)}
+                    />
+                  ))}
+                  <div className="col-12">
+                    <button type="submit" className="btn btn-primary">
+                      Process
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
